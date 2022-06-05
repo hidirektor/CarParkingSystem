@@ -16,6 +16,7 @@ Servo kapiServo;
 RFID rfid(SS_PIN, RST_PIN);
 
 int gecerliKartHEX[5] = {0xE9,0xD6,0xA4,0x59,0xC2};
+int otoparkKapasitesi = 4;
 boolean gecerliKartDurum = false;
 int buzzerMelodi[] = {NOTE_C4, NOTE_G3, NOTE_G3, NOTE_A3, NOTE_G3, 0, NOTE_B3, NOTE_C4};
 int notaDizisi[] = {4, 8, 8, 4, 4, 4, 4, 4};
@@ -36,7 +37,9 @@ void loop() {
     gecerliKartDurum = true;
     kapiServo.write(0);
     lcd.clear();
-    lcd.print(" Lütfen Kartınızı Okutun:  ");
+    lcd.print("Boş Yer Sayısı: ");
+    lcd.print(otoparkKapasitesi);
+    lcd.print(" \nLütfen Kartınızı Okutun:  ");
 
     if(rfid.isCard()) {
         if(rfid.readCardSerial()) {
@@ -62,7 +65,9 @@ void loop() {
         Serial.println();
         delay(1000);
         if(gecerliKartDurum) {
+          if(otoparkKapasitesi > 0) {
             Serial.println("\nOtoparka Hoşgeldiniz!");
+            otoparkKapasitesi--;
             lcd.clear();
             lcd.print("Aracınızı İstediğiniz");
             lcd.setCursor(0, 1);
@@ -109,8 +114,30 @@ void loop() {
             lcd.print("Otopark Kapısı");
             lcd.setCursor(0, 1);
             lcd.print("Kapanıyor!");
+            delay(200);
 
+            lcd.clear();
+            lcd.print("Otoparkımızdaki Boş Yer Sayısı: ");
+            lcd.print("      ");
+            lcd.print(otoparkKapasitesi);
             delay(2000);
+          } else {
+            Serial.println("\nLütfen Otoparkı Terkedin !");
+            lcd.clear();
+            lcd.print("Otoparkımızda Boş Yer Yok !");
+            lcd.setCursor(0, 1);
+            lcd.print("Lütfen Otoparkı Terkedin!");
+
+            for(int i=0; i<7; i++) {
+                digitalWrite(Buzzer, HIGH);
+                digitalWrite(kirmiziLed, HIGH);
+                delay(500);
+                digitalWrite(Buzzer, LOW);
+                digitalWrite(kirmiziLed, LOW);
+                delay(500);
+            }
+            delay(1000);
+          }
         } else {
             Serial.println("\nLütfen Otoparkı Terkedin !");
             lcd.clear();
