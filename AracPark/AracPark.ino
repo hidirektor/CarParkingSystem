@@ -15,8 +15,9 @@ LiquidCrystal lcd(A5, A4, A3, A2, A1, A0);
 Servo kapiServo;
 RFID rfid(SS_PIN, RST_PIN);
 
-int gecerliKartHEX[5] = {0xE9,0xD6,0xA4,0x59,0xC2};
+int gecerliKartHEX[5] = {99,97,41,17,58};
 int otoparkKapasitesi = 4;
+int saatlikUcret = 100;
 boolean gecerliKartDurum = false;
 int buzzerMelodi[] = {NOTE_C4, NOTE_G3, NOTE_G3, NOTE_A3, NOTE_G3, 0, NOTE_B3, NOTE_C4};
 int notaDizisi[] = {4, 8, 8, 4, 4, 4, 4, 4};
@@ -37,14 +38,17 @@ void loop() {
     gecerliKartDurum = true;
     kapiServo.write(0);
     lcd.clear();
-    lcd.print("Boş Yer Sayısı: ");
-    lcd.print(otoparkKapasitesi);
-    lcd.print(" \nLütfen Kartınızı Okutun:  ");
+    lcd.print("Bos Yer: ");
+    char kapasite[1];
+    sprintf(kapasite, "%d", otoparkKapasitesi);
+    lcd.print(kapasite);
+    lcd.setCursor(0,1);
+    lcd.print("Karti Okutun:  ");
 
     if(rfid.isCard()) {
         if(rfid.readCardSerial()) {
             lcd.clear();
-            lcd.print("UNIQUE ID:- ");
+            lcd.print("KART ID:- ");
             delay(500);
             lcd.setCursor(0, 1);
             for( int i = 0; i < 5; i++ ) {
@@ -54,7 +58,7 @@ void loop() {
                 lcd.print(" ");
             }
             delay(500);
-
+            
             for(int i=0; i<5; i++) {
                 if(gecerliKartHEX[i] != rfid.serNum[i]) {
                     gecerliKartDurum = false;
@@ -66,12 +70,12 @@ void loop() {
         delay(1000);
         if(gecerliKartDurum) {
           if(otoparkKapasitesi > 0) {
-            Serial.println("\nOtoparka Hoşgeldiniz!");
+            Serial.println("\nHosgeldiniz!");
             otoparkKapasitesi--;
             lcd.clear();
-            lcd.print("Aracınızı İstediğiniz");
+            lcd.print("Istediginiz");
             lcd.setCursor(0, 1);
-            lcd.print("Yere Parkedebilirsiniz!");
+            lcd.print("Yere Parkedin!");
             delay(2000);
             digitalWrite(yesilLed, HIGH);
             int i = 0;
@@ -90,15 +94,15 @@ void loop() {
             delay(200);
 
             lcd.clear();
-            lcd.print("Otopark Girişiniz Aktif");
+            lcd.print("Girisiniz Aktif");
             lcd.setCursor(0,1);
-            lcd.print("Lütfen Otoparka Girin!");
+            lcd.print("Otoparka Girin!");
 
             delay(2000);
             lcd.clear();
 
             for(int i=10; i>0; i--) {
-                lcd.print("Otopark Girişi");
+                lcd.print("Otopark Girisi");
                 lcd.setCursor(0, 1);
                 lcd.print(i);
                 lcd.print(" Saniye Sonra");
@@ -111,22 +115,22 @@ void loop() {
             delay(200);
 
             lcd.clear();
-            lcd.print("Otopark Kapısı");
+            lcd.print("Otopark Kapisi");
             lcd.setCursor(0, 1);
-            lcd.print("Kapanıyor!");
+            lcd.print("Kapaniyor!");
             delay(200);
 
             lcd.clear();
-            lcd.print("Otoparkımızdaki Boş Yer Sayısı: ");
+            lcd.print("Bos Yer Sayisi: ");
             lcd.print("      ");
             lcd.print(otoparkKapasitesi);
             delay(2000);
           } else {
-            Serial.println("\nLütfen Otoparkı Terkedin !");
+            Serial.println("\nLutfen Terkedin !");
             lcd.clear();
-            lcd.print("Otoparkımızda Boş Yer Yok !");
+            lcd.print("Bos Yer Yok !");
             lcd.setCursor(0, 1);
-            lcd.print("Lütfen Otoparkı Terkedin!");
+            lcd.print("Lutfen Terkedin!");
 
             for(int i=0; i<7; i++) {
                 digitalWrite(Buzzer, HIGH);
@@ -139,11 +143,11 @@ void loop() {
             delay(1000);
           }
         } else {
-            Serial.println("\nLütfen Otoparkı Terkedin !");
+            Serial.println("\nLutfen Terkedin !");
             lcd.clear();
-            lcd.print("Otopark Kartı Bulunamadı !");
+            lcd.print("Kart Bulunamadi !");
             lcd.setCursor(0, 1);
-            lcd.print("Lütfen Otoparkı Terkedin!");
+            lcd.print("Lutfen Terkedin!");
 
             for(int i=0; i<7; i++) {
                 digitalWrite(Buzzer, HIGH);
