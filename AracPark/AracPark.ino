@@ -45,20 +45,24 @@ byte gecerliKartDort[4] = {
 
 //giriş yapıp yapmama durumu, kaldığı süre
 int girisYaptiBir = 0;
-int kalmaSuresiBir = 0;
+uint32_t kalmaSuresiBir = 0;
+uint32_t yeniSureBir;
 
 int girisYaptiIki = 0;
-int kalmaSuresiIki = 0;
+uint32_t kalmaSuresiIki = 0;
+uint32_t yeniSureIki;
 
 int girisYaptiUc = 0;
-int kalmaSuresiUc = 0;
+uint32_t kalmaSuresiUc = 0;
+uint32_t yeniSureUc;
 
 int girisYaptiDort = 0;
-int kalmaSuresiDort = 0;
+uint32_t kalmaSuresiDort = 0;
+uint32_t yeniSureDort;
 
 int okutulanKart = 0;
 int otoparkKapasitesi = 4;
-int saatlikUcret = 100;
+int saatlikUcret = 10;
 int buzzerMelodi[] = {NOTE_C4, NOTE_G3, NOTE_G3, NOTE_A3, NOTE_G3, 0, NOTE_B3, NOTE_C4};
 int notaDizisi[] = {4, 8, 8, 4, 4, 4, 4, 4};
 
@@ -97,19 +101,19 @@ void loop() {
   }
   
   if (okutulanKart == 1) {
-    kalmaSuresiBir = millis();
+    kalmaSuresiBir = 0;
     ekranaYazdir(2);
     genelSistem(1);
   } else if(okutulanKart == 2) {
-    kalmaSuresiIki = millis();
+    kalmaSuresiIki = 0;
     ekranaYazdir(2);
     genelSistem(2);
   } else if(okutulanKart == 3) {
-    kalmaSuresiUc = millis();
+    kalmaSuresiUc = 0;
     ekranaYazdir(2);
     genelSistem(3);
   } else if(okutulanKart == 4) {
-    kalmaSuresiDort = millis();
+    kalmaSuresiDort = 0;
     ekranaYazdir(2);
     genelSistem(4);
   } else {
@@ -279,7 +283,7 @@ void genelSistem(int cardType) {
         ekranaYazdir(4);
         //onayMelodi();
         delay(500);
-        kapiServo.write(180);
+        kapiServo.write(90);
         delay(200);
         ekranaYazdir(5);
         delay(200);
@@ -295,7 +299,7 @@ void genelSistem(int cardType) {
         ekranaYazdir(9);
         //onayMelodi();
         delay(500);
-        kapiServo.write(180);
+        kapiServo.write(90);
         delay(200);
         ekranaYazdir(5);
         delay(200);
@@ -313,10 +317,12 @@ void genelSistem(int cardType) {
       otoparkKapasitesi++;
       girisYaptiBir = 0;
       ekranaYazdir(10);
-      int gecenSure = millis() - kalmaSuresiBir;
-      int toplamUcret = saatlikUcret * gecenSure + 7;
+      yeniSureBir = millis();
+      uint32_t gecenSure = yeniSureBir - kalmaSuresiBir;
+      uint32_t toplamUcret = saatlikUcret * gecenSure;
+      kalmaSuresiBir = yeniSureBir;
       char toplamUcretString[4];
-      sprintf(toplamUcretString, "%d", toplamUcret);
+      sprintf(toplamUcretString, "%ld", toplamUcret);
       lcd.clear();
       lcd.print("Toplam Ucret: ");
       lcd.print("");
@@ -333,7 +339,7 @@ void genelSistem(int cardType) {
         ekranaYazdir(4);
         //onayMelodi();
         delay(500);
-        kapiServo.write(180);
+        kapiServo.write(90);
         delay(200);
         ekranaYazdir(5);
         delay(200);
@@ -349,7 +355,7 @@ void genelSistem(int cardType) {
         ekranaYazdir(9);
         //onayMelodi();
         delay(500);
-        kapiServo.write(180);
+        kapiServo.write(90);
         delay(200);
         ekranaYazdir(5);
         delay(200);
@@ -367,10 +373,12 @@ void genelSistem(int cardType) {
       otoparkKapasitesi++;
       girisYaptiIki = 0;
       ekranaYazdir(10);
-      int gecenSure = millis() - kalmaSuresiIki;
-      int toplamUcret = saatlikUcret * gecenSure + 7;
+      yeniSureIki = millis();
+      uint32_t gecenSure = yeniSureIki - kalmaSuresiIki;
+      uint32_t toplamUcret = saatlikUcret * gecenSure;
+      kalmaSuresiIki = yeniSureIki;
       char toplamUcretString[4];
-      sprintf(toplamUcretString, "%d", toplamUcret);
+      sprintf(toplamUcretString, "%ld", toplamUcret);
       lcd.clear();
       lcd.print("Toplam Ucret: ");
       lcd.print("");
@@ -387,7 +395,7 @@ void genelSistem(int cardType) {
         ekranaYazdir(4);
         //onayMelodi();
         delay(500);
-        kapiServo.write(180);
+        kapiServo.write(90);
         delay(200);
         ekranaYazdir(5);
         delay(200);
@@ -403,7 +411,7 @@ void genelSistem(int cardType) {
         ekranaYazdir(9);
         //onayMelodi();
         delay(500);
-        kapiServo.write(180);
+        kapiServo.write(90);
         delay(200);
         ekranaYazdir(5);
         delay(200);
@@ -421,10 +429,12 @@ void genelSistem(int cardType) {
       otoparkKapasitesi++;
       girisYaptiUc = 0;
       ekranaYazdir(10);
-      int gecenSure = millis() - kalmaSuresiUc;
-      int toplamUcret = saatlikUcret * gecenSure + 7;
+      yeniSureUc = millis();
+      uint32_t gecenSure = yeniSureUc - kalmaSuresiUc;
+      uint32_t toplamUcret = saatlikUcret * gecenSure;
+      kalmaSuresiUc = yeniSureUc;
       char toplamUcretString[4];
-      sprintf(toplamUcretString, "%d", toplamUcret);
+      sprintf(toplamUcretString, "%ld", toplamUcret);
       lcd.clear();
       lcd.print("Toplam Ucret: ");
       lcd.print("");
@@ -441,7 +451,7 @@ void genelSistem(int cardType) {
         ekranaYazdir(4);
         //onayMelodi();
         delay(500);
-        kapiServo.write(180);
+        kapiServo.write(90);
         delay(200);
         ekranaYazdir(5);
         delay(200);
@@ -457,7 +467,7 @@ void genelSistem(int cardType) {
         ekranaYazdir(9);
         //onayMelodi();
         delay(500);
-        kapiServo.write(180);
+        kapiServo.write(90);
         delay(200);
         ekranaYazdir(5);
         delay(200);
@@ -475,10 +485,12 @@ void genelSistem(int cardType) {
       otoparkKapasitesi++;
       girisYaptiDort = 0;
       ekranaYazdir(10);
-      int gecenSure = millis() - kalmaSuresiDort;
-      int toplamUcret = saatlikUcret * gecenSure + 7;
+      yeniSureDort = millis();
+      uint32_t gecenSure = yeniSureDort - kalmaSuresiDort;
+      uint32_t toplamUcret = saatlikUcret * gecenSure;
+      kalmaSuresiDort = yeniSureDort;
       char toplamUcretString[4];
-      sprintf(toplamUcretString, "%d", toplamUcret);
+      sprintf(toplamUcretString, "%ld", toplamUcret);
       lcd.clear();
       lcd.print("Toplam Ucret: ");
       lcd.print("");
